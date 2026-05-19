@@ -1,0 +1,1982 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nomade Lab × Prodigy — Multi-DSP, data layer & AI advertising para su roster</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400;1,9..144,800&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   NOMADE × PRODIGY — Interactive Partnership Microsite
+   ============================================================ */
+:root {
+  --purple: #5C3DF5;
+  --purple-deep: #3D1FD9;
+  --purple-soft: #E8E0FF;
+  --purple-wash: #F3EEFF;
+  --pink: #F46A8C;
+  --pink-soft: #FDDDE5;
+  --pink-wash: #FDF2F5;
+  --ink: #0F0F1A;
+  --ink-soft: #3B3B52;
+  --muted: #6B6B85;
+  --line: #E5E1F0;
+  --bg: #FFFFFF;
+  --bg-cream: #FAF7F2;
+  --bg-soft: #F7F4FF;
+  --green: #10B981;
+  --yellow: #F59E0B;
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Manrope', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.55;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 22px 48px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+  z-index: 100;
+  font-size: 13px;
+}
+.nav-brand {
+  display: flex; align-items: baseline; gap: 8px;
+  font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+}
+.nav-brand .nomade { color: var(--purple); }
+.nav-brand .lab { color: var(--ink); }
+.nav-brand .x { color: var(--muted); font-weight: 400; margin: 0 6px; }
+.nav-brand .verben { color: var(--ink); }
+
+.nav-links { display: flex; gap: 28px; }
+.nav-links a {
+  color: var(--ink-soft); text-decoration: none;
+  font-weight: 500; transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--purple); }
+@media (max-width: 768px) {
+  .nav { padding: 18px 22px; }
+  .nav-links { display: none; }
+}
+
+/* ============================================================
+   SECTION BASE
+   ============================================================ */
+section {
+  padding: 110px 48px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+@media (max-width: 768px) {
+  section { padding: 70px 22px; }
+}
+
+.eyebrow {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--pink); margin-bottom: 18px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(34px, 5vw, 56px);
+  line-height: 1.05;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin-bottom: 22px;
+}
+.section-title em {
+  font-style: italic; color: var(--purple); font-weight: 400;
+}
+.section-sub {
+  font-size: clamp(15px, 1.4vw, 18px);
+  color: var(--ink-soft);
+  max-width: 760px;
+  line-height: 1.55;
+  margin-bottom: 60px;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  padding-top: 160px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+.hero-bg-circle {
+  position: absolute; top: 8%; right: -8%;
+  width: 580px; height: 580px;
+  background: var(--pink-soft);
+  border-radius: 50%;
+  z-index: -1;
+  opacity: 0.55;
+  animation: float 12s ease-in-out infinite;
+}
+.hero-bg-circle.inner {
+  width: 200px; height: 200px;
+  top: 22%; right: 10%;
+  background: var(--pink);
+  opacity: 0.85;
+  animation-delay: -3s;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  50% { transform: translateY(-26px) translateX(-12px); }
+}
+
+.hero-eyebrow {
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--purple);
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp 0.9s 0.1s ease-out forwards;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(48px, 8vw, 104px);
+  line-height: 0.96;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeUp 0.9s 0.25s ease-out forwards;
+}
+.hero-title .accent {
+  font-style: italic; font-weight: 400;
+  color: var(--purple);
+}
+.hero-subtitle {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(22px, 2.6vw, 36px);
+  line-height: 1.25;
+  color: var(--ink-soft);
+  max-width: 820px;
+  margin-bottom: 40px;
+  opacity: 0;
+  animation: fadeUp 0.9s 0.42s ease-out forwards;
+}
+.hero-subtitle .pink { color: var(--pink); font-weight: 800; font-style: normal; }
+.hero-sub {
+  font-size: 17px;
+  color: var(--ink-soft);
+  max-width: 680px;
+  line-height: 1.6;
+  margin-bottom: 50px;
+  opacity: 0;
+  animation: fadeUp 0.9s 0.6s ease-out forwards;
+}
+
+.hero-cta-row {
+  display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.9s 0.78s ease-out forwards;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 16px 28px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.btn-primary {
+  background: var(--purple); color: white;
+  box-shadow: 0 4px 14px rgba(92, 61, 245, 0.28);
+}
+.btn-primary:hover { background: var(--purple-deep); transform: translateY(-2px); }
+.btn-ghost {
+  background: transparent; color: var(--ink);
+  border: 1.5px solid var(--line);
+}
+.btn-ghost:hover { border-color: var(--purple); color: var(--purple); }
+
+.hero-scroll {
+  position: absolute; bottom: 40px; left: 48px;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--muted);
+  display: flex; align-items: center; gap: 12px;
+  opacity: 0;
+  animation: fadeUp 0.9s 1s ease-out forwards;
+}
+.hero-scroll-line {
+  width: 50px; height: 1px; background: var(--muted);
+  position: relative; overflow: hidden;
+}
+.hero-scroll-line::after {
+  content: ''; position: absolute;
+  top: 0; left: -100%; width: 100%; height: 100%;
+  background: var(--purple);
+  animation: scrollLine 2s ease-in-out infinite;
+}
+@keyframes scrollLine {
+  0% { left: -100%; } 100% { left: 100%; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .hero { padding-top: 110px; min-height: auto; padding-bottom: 80px; }
+  .hero-bg-circle { width: 320px; height: 320px; right: -20%; }
+  .hero-bg-circle.inner { width: 100px; height: 100px; }
+  .hero-scroll { display: none; }
+}
+
+/* ============================================================
+   STATS
+   ============================================================ */
+.stats-section {
+  background: var(--bg-soft);
+  max-width: none;
+  padding-left: 0; padding-right: 0;
+}
+.stats-inner {
+  max-width: 1400px; margin: 0 auto; padding: 0 48px;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 50px;
+}
+.stat-card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 36px 28px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(92, 61, 245, 0.08);
+}
+.stat-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: var(--purple);
+}
+.stat-num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 64px;
+  line-height: 1;
+  color: var(--purple);
+  margin-bottom: 16px;
+  letter-spacing: -0.03em;
+}
+.stat-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.stat-sub {
+  font-size: 12px;
+  color: var(--muted);
+}
+@media (max-width: 880px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .stat-num { font-size: 48px; }
+}
+
+/* ============================================================
+   PLATFORM PILLARS
+   ============================================================ */
+.pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+}
+.pillar {
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 32px 26px;
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.pillar:hover {
+  transform: translateY(-6px);
+  border-color: var(--purple);
+  box-shadow: 0 16px 40px rgba(92, 61, 245, 0.1);
+}
+.pillar.featured {
+  background: var(--ink);
+  color: white;
+  border-color: var(--ink);
+}
+.pillar.featured .pillar-name { color: white; }
+.pillar.featured .pillar-items li { color: rgba(255, 255, 255, 0.75); }
+.pillar.featured .pillar-tag {
+  background: var(--pink); color: white;
+}
+.pillar-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: var(--purple-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  margin-bottom: 18px;
+  color: var(--purple);
+}
+.pillar.featured .pillar-icon {
+  background: rgba(244, 106, 140, 0.18);
+  color: var(--pink);
+}
+.pillar-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 19px;
+  letter-spacing: -0.01em;
+  margin-bottom: 18px;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.pillar-items {
+  list-style: none;
+  margin-bottom: 22px;
+}
+.pillar-items li {
+  font-size: 13px;
+  color: var(--ink-soft);
+  padding: 6px 0;
+  position: relative;
+  padding-left: 14px;
+}
+.pillar-items li::before {
+  content: '·';
+  position: absolute;
+  left: 0; color: var(--purple);
+  font-weight: 800;
+}
+.pillar.featured .pillar-items li::before { color: var(--pink); }
+.pillar-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--purple-soft);
+  color: var(--purple);
+}
+@media (max-width: 1000px) {
+  .pillars-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 540px) {
+  .pillars-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   CHATGPT SIMULATOR
+   ============================================================ */
+.simulator-section {
+  background: var(--bg-cream);
+  max-width: none;
+  padding-left: 0; padding-right: 0;
+}
+.simulator-inner {
+  max-width: 1400px; margin: 0 auto; padding: 0 48px;
+}
+.sim-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  margin-top: 50px;
+  align-items: start;
+}
+.sim-left h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 28px;
+  line-height: 1.2;
+  color: var(--ink);
+  margin-bottom: 18px;
+  letter-spacing: -0.01em;
+}
+.sim-left p {
+  color: var(--ink-soft);
+  font-size: 15px;
+  line-height: 1.65;
+  margin-bottom: 20px;
+}
+
+.sim-prompts {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  margin-top: 24px;
+}
+.sim-prompt-btn {
+  background: white;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.sim-prompt-btn:hover {
+  border-color: var(--purple);
+  color: var(--purple);
+  transform: translateY(-1px);
+}
+.sim-prompt-btn.active {
+  background: var(--purple);
+  color: white;
+  border-color: var(--purple);
+}
+
+/* Mock chat */
+.sim-chat {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 28px;
+  box-shadow: 0 24px 60px rgba(15, 15, 26, 0.08);
+  min-height: 460px;
+  display: flex; flex-direction: column;
+}
+.sim-chat-header {
+  display: flex; align-items: center; gap: 10px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 22px;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+.sim-chat-header .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--green);
+}
+
+.sim-bubble {
+  margin-bottom: 18px;
+}
+.sim-bubble .who {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.sim-bubble.user .text {
+  background: var(--bg-soft);
+  padding: 14px 18px;
+  border-radius: 16px 16px 16px 4px;
+  font-size: 15px;
+  color: var(--ink);
+  font-style: italic;
+}
+.sim-bubble.gpt .text {
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.6;
+  padding-left: 4px;
+  min-height: 50px;
+}
+.sim-cursor::after {
+  content: '▎';
+  color: var(--purple);
+  animation: blink 1s infinite;
+  margin-left: 1px;
+}
+@keyframes blink {
+  0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; }
+}
+
+.sim-ad {
+  margin-top: 14px;
+  background: white;
+  border: 2px solid var(--purple);
+  border-radius: 14px;
+  padding: 18px 20px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.6s, transform 0.6s;
+}
+.sim-ad.show {
+  opacity: 1; transform: translateY(0);
+}
+.sim-ad-label {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--pink);
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.sim-ad-label::before {
+  content: ''; width: 6px; height: 6px;
+  background: var(--pink); border-radius: 50%;
+}
+.sim-ad-title {
+  font-weight: 700; font-size: 16px;
+  color: var(--ink); margin-bottom: 4px;
+}
+.sim-ad-desc {
+  font-size: 13px; color: var(--ink-soft);
+  line-height: 1.5;
+}
+.sim-ad-meta {
+  display: flex; gap: 14px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-size: 11px;
+  color: var(--muted);
+}
+.sim-ad-meta strong { color: var(--purple); }
+
+@media (max-width: 900px) {
+  .sim-layout { grid-template-columns: 1fr; gap: 36px; }
+}
+
+/* ============================================================
+   DATA DASHBOARD (real-time mockup)
+   ============================================================ */
+.dash-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 56px;
+  align-items: start;
+}
+.dash-left h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 24px;
+  color: var(--ink);
+  margin: 0 0 16px;
+  letter-spacing: -0.01em;
+}
+.dash-left p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  margin: 0 0 16px;
+}
+.dash-card {
+  background: #0F0E1A;
+  border-radius: 22px;
+  padding: 26px;
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 24px 60px rgba(92, 61, 245, 0.25);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.dash-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.dash-live {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.9);
+  font-weight: 600;
+}
+.dash-live-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #34D399;
+  box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.6);
+  animation: dashpulse 1.6s infinite;
+}
+@keyframes dashpulse {
+  0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.6); }
+  70% { box-shadow: 0 0 0 8px rgba(52, 211, 153, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+}
+.dash-tabs {
+  display: flex;
+  gap: 4px;
+  background: rgba(255,255,255,0.06);
+  padding: 4px;
+  border-radius: 10px;
+}
+.dash-tab {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.6);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.dash-tab:hover { color: white; }
+.dash-tab.active {
+  background: var(--purple);
+  color: white;
+}
+.dash-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.dash-kpi {
+  background: rgba(255,255,255,0.04);
+  border-radius: 12px;
+  padding: 14px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.dash-kpi-label {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.dash-kpi-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  color: white;
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+.dash-kpi-delta {
+  font-size: 11px;
+  font-weight: 600;
+}
+.dash-kpi-delta.up { color: #34D399; }
+.dash-kpi-delta.down { color: #F87171; }
+.dash-chart {
+  background: rgba(255,255,255,0.04);
+  border-radius: 12px;
+  padding: 18px;
+  border: 1px solid rgba(255,255,255,0.05);
+  margin-bottom: 22px;
+}
+.dash-chart-title {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.dash-chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 80px;
+}
+.dash-bar {
+  flex: 1;
+  background: linear-gradient(to top, var(--purple), #8B6BFF);
+  border-radius: 4px 4px 0 0;
+  min-height: 8px;
+  transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.dash-bar.peak {
+  background: linear-gradient(to top, var(--pink), #FF9BB5);
+}
+.dash-insights {
+  background: rgba(244, 106, 140, 0.08);
+  border: 1px solid rgba(244, 106, 140, 0.18);
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+.dash-insights-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pink);
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.dash-insights-icon {
+  width: 18px; height: 18px;
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  background: var(--pink);
+  border-radius: 4px;
+  color: #1a1330;
+  font-size: 11px;
+  font-weight: 800;
+}
+.dash-insight-item {
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(255,255,255,0.85);
+  padding: 8px 0;
+  border-bottom: 1px dashed rgba(255,255,255,0.08);
+}
+.dash-insight-item:last-child { border-bottom: none; padding-bottom: 0; }
+.dash-insight-item:first-child { padding-top: 0; }
+.dash-insight-item strong { color: white; }
+
+@media (max-width: 900px) {
+  .dash-layout { grid-template-columns: 1fr; gap: 36px; }
+  .dash-kpis { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ============================================================
+   USE CASES TABS
+   ============================================================ */
+.usecase-tabs {
+  display: flex;
+  gap: 6px;
+  background: var(--bg-soft);
+  padding: 6px;
+  border-radius: 14px;
+  margin-bottom: 36px;
+  width: fit-content;
+  flex-wrap: wrap;
+}
+.usecase-tab {
+  border: none;
+  background: transparent;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all 0.25s;
+  letter-spacing: 0.04em;
+}
+.usecase-tab:hover { color: var(--purple); }
+.usecase-tab.active {
+  background: white;
+  color: var(--purple);
+  box-shadow: 0 4px 14px rgba(92, 61, 245, 0.12);
+}
+.usecase-content {
+  display: none;
+  animation: fadeIn 0.4s ease-out;
+}
+.usecase-content.active { display: block; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.uc-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1.5fr 1.4fr;
+  gap: 28px;
+  padding: 38px;
+  background: var(--bg-soft);
+  border-radius: 22px;
+  border: 1px solid var(--line);
+}
+.uc-block h4 {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--purple);
+  margin-bottom: 14px;
+}
+.uc-block p {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+.uc-block .quote {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.45;
+  color: var(--ink);
+  border-left: 3px solid var(--pink);
+  padding-left: 16px;
+}
+.uc-block .play {
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.55;
+}
+.uc-kpi {
+  display: inline-block;
+  background: var(--purple-soft);
+  color: var(--purple);
+  font-weight: 700;
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  margin-top: 12px;
+  letter-spacing: 0.04em;
+}
+@media (max-width: 900px) {
+  .uc-grid { grid-template-columns: 1fr; gap: 28px; padding: 28px; }
+}
+
+/* ============================================================
+   ENGAGEMENT LEVELS
+   ============================================================ */
+.levels-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+.level-card {
+  background: white;
+  border: 1.5px solid var(--line);
+  border-radius: 22px;
+  padding: 36px 30px;
+  position: relative;
+  transition: all 0.3s;
+}
+.level-card:hover {
+  border-color: var(--purple);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(92, 61, 245, 0.1);
+}
+.level-card.featured {
+  background: var(--purple);
+  color: white;
+  border-color: var(--purple);
+}
+.level-card.featured .level-title { color: white; }
+.level-card.featured .level-sub { color: rgba(255, 255, 255, 0.7); }
+.level-card.featured .level-list li { color: rgba(255, 255, 255, 0.85); }
+.level-card.featured .level-list li::before { color: var(--pink); }
+.level-card.featured .level-tag { background: var(--pink); }
+
+.level-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  background: var(--purple);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  margin-bottom: 22px;
+}
+.level-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 26px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.level-sub {
+  font-style: italic;
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 26px;
+}
+.level-list {
+  list-style: none;
+}
+.level-list li {
+  font-size: 14px;
+  color: var(--ink-soft);
+  padding: 10px 0;
+  padding-left: 22px;
+  position: relative;
+  line-height: 1.5;
+}
+.level-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--purple);
+  font-weight: 700;
+}
+@media (max-width: 900px) {
+  .levels-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   CTA
+   ============================================================ */
+.cta-section {
+  background: var(--ink);
+  color: white;
+  max-width: none;
+  padding-left: 0; padding-right: 0;
+  position: relative;
+  overflow: hidden;
+}
+.cta-inner {
+  max-width: 1400px; margin: 0 auto; padding: 0 48px;
+  position: relative; z-index: 2;
+}
+.cta-bg-circle {
+  position: absolute;
+  width: 600px; height: 600px;
+  background: var(--purple);
+  border-radius: 50%;
+  bottom: -300px; right: -150px;
+  opacity: 0.35;
+  filter: blur(80px);
+  z-index: 1;
+}
+.cta-bg-pink {
+  position: absolute;
+  width: 380px; height: 380px;
+  background: var(--pink);
+  border-radius: 50%;
+  top: -190px; left: 20%;
+  opacity: 0.18;
+  filter: blur(70px);
+  z-index: 1;
+}
+.cta-section .eyebrow { color: var(--pink); }
+.cta-section .section-title { color: white; }
+.cta-section .section-title em { color: var(--pink); }
+.cta-section .section-sub { color: rgba(255, 255, 255, 0.72); }
+
+.cta-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-bottom: 50px;
+}
+.cta-step {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 32px 28px;
+  transition: all 0.3s;
+}
+.cta-step:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--purple);
+  transform: translateY(-3px);
+}
+.cta-step-num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 36px;
+  color: var(--pink);
+  margin-bottom: 14px;
+  letter-spacing: -0.03em;
+}
+.cta-step h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  color: white;
+  margin-bottom: 12px;
+}
+.cta-step p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+}
+@media (max-width: 900px) {
+  .cta-steps { grid-template-columns: 1fr; }
+}
+
+.cta-card {
+  background: linear-gradient(135deg, var(--purple) 0%, var(--purple-deep) 100%);
+  border-radius: 26px;
+  padding: 48px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+  align-items: center;
+}
+.cta-card h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 38px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: white;
+  margin-bottom: 12px;
+}
+.cta-card h3 em { color: var(--pink); font-style: italic; font-weight: 400; }
+.cta-card p {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 15px;
+  line-height: 1.6;
+}
+.cta-contact {
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 18px;
+  padding: 26px 28px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.cta-contact-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--pink);
+  margin-bottom: 10px;
+}
+.cta-contact-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 19px;
+  color: white;
+  margin-bottom: 2px;
+}
+.cta-contact-role {
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0;
+}
+.cta-contact-person + .cta-contact-person {
+  margin-top: 12px;
+}
+.cta-contact-link {
+  display: inline-block;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s;
+}
+.cta-contact-link:hover {
+  background: white; color: var(--purple);
+}
+@media (max-width: 900px) {
+  .cta-card { grid-template-columns: 1fr; padding: 36px; }
+  .cta-card h3 { font-size: 28px; }
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+  padding: 36px 48px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+.footer .nomade { color: var(--purple); font-weight: 800; letter-spacing: 0.18em; }
+@media (max-width: 600px) {
+  .footer { flex-direction: column; gap: 12px; text-align: center; padding: 30px 22px; }
+}
+
+/* ============================================================
+   SCROLL REVEAL
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.9s ease-out, transform 0.9s ease-out;
+}
+.reveal.in {
+  opacity: 1; transform: translateY(0);
+}
+</style>
+</head>
+
+<body>
+
+<!-- ========================================================
+     NAV
+     ======================================================== -->
+<nav class="nav">
+  <div class="nav-brand">
+    <span class="nomade">NOMADE</span>
+    <span class="lab">LAB</span>
+    <span class="x">×</span>
+    <span class="verben">PRODIGY</span>
+  </div>
+  <div class="nav-links">
+    <a href="#stack">Stack</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#chatgpt">ChatGPT Ads</a>
+    <a href="#usecases">Verticales</a>
+    <a href="#engage">Modelo</a>
+    <a href="#next">Empezar</a>
+  </div>
+</nav>
+
+<!-- ========================================================
+     HERO
+     ======================================================== -->
+<section class="hero">
+  <div class="hero-bg-circle"></div>
+  <div class="hero-bg-circle inner"></div>
+
+  <div class="hero-eyebrow">Propuesta de partnership · Mayo 2026</div>
+  <h1 class="hero-title">
+    Powering<br>
+    Prodigy<span class="accent">.</span>
+  </h1>
+  <p class="hero-subtitle">
+    Multi-DSP, data layer y AI advertising —<br>
+    <span class="pink">el</span> upgrade técnico <span class="pink">para</span> su roster.
+  </p>
+  <p class="hero-sub">
+    Acceso directo a tres DSPs (DV360, StackAdapt y Illumin), data &amp; BI custom
+    para los clientes enterprise del roster, y AI advertising como nueva superficie.
+    Una capa que se acopla detrás de Prodigy y suma escala técnica.
+  </p>
+
+  <div class="hero-cta-row">
+    <a href="#next" class="btn btn-primary">
+      Próximos pasos
+      <span style="font-size: 18px;">→</span>
+    </a>
+    <a href="#dashboard" class="btn btn-ghost">Ver dashboard demo</a>
+  </div>
+
+  <div class="hero-scroll">
+    <span class="hero-scroll-line"></span>
+    Scroll
+  </div>
+</section>
+
+<!-- ========================================================
+     STATS
+     ======================================================== -->
+<section class="stats-section">
+  <div class="stats-inner">
+    <div class="eyebrow reveal">Quiénes somos</div>
+    <h2 class="section-title reveal">
+      La capa técnica <em>enterprise</em><br>
+      detrás de las agencias programáticas.
+    </h2>
+    <p class="section-sub reveal">
+      Bootstrapped, GMP Sales Partner top-tier, acceso directo a StackAdapt e Illumin,
+      BMs directos en Meta, TikTok y Snap, infrastructure team senior. Plug-in detrás
+      de Prodigy para sumar inventario, data layer y AI advertising a las campañas
+      del roster.
+    </p>
+
+    <div class="stats-grid">
+      <div class="stat-card reveal">
+        <div class="stat-num" data-target="5" data-suffix="">0</div>
+        <div class="stat-label">Países con operación local</div>
+        <div class="stat-sub">US · MX · CO · AR · ES</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="stat-num" data-target="3" data-suffix="">0</div>
+        <div class="stat-label">DSPs con acceso directo</div>
+        <div class="stat-sub">DV360 · StackAdapt · Illumin</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="stat-num" data-target="20" data-suffix="+">0</div>
+        <div class="stat-label">Plataformas activas</div>
+        <div class="stat-sub">Performance, Social, AI, BI</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="stat-num">DWH</div>
+        <div class="stat-label">Custom data warehouse</div>
+        <div class="stat-sub">Real-time · client-owned</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     STACK
+     ======================================================== -->
+<section id="stack">
+  <div class="eyebrow reveal">Cobertura de plataformas</div>
+  <h2 class="section-title reveal">
+    Un stack pensado para<br>
+    <em>sumar inventario, data y AI.</em>
+  </h2>
+  <p class="section-sub reveal">
+    Cuatro pilares organizados alrededor de lo que diferencia a una agencia
+    programática moderna: acceso multi-DSP, social performance, data en tiempo
+    real, y AI advertising como nueva superficie.
+  </p>
+
+  <div class="pillars-grid">
+    <div class="pillar reveal">
+      <div class="pillar-icon">⚡</div>
+      <h3 class="pillar-name">Multi-DSP · acceso directo</h3>
+      <ul class="pillar-items">
+        <li>DV360 · Google Marketing Platform</li>
+        <li>StackAdapt DSP · acceso directo</li>
+        <li>Illumin DSP · acceso directo</li>
+        <li>CM360 · ad serving</li>
+        <li>Google Ads · Search, Shopping, PMAX</li>
+        <li>SA360 + GA4 / GA360</li>
+      </ul>
+      <div class="pillar-tag">3 DSPs · direct access</div>
+    </div>
+
+    <div class="pillar reveal">
+      <div class="pillar-icon">∞</div>
+      <h3 class="pillar-name">Performance Social</h3>
+      <ul class="pillar-items">
+        <li>Meta · BM directo</li>
+        <li>TikTok Ads · BM directo</li>
+        <li>Snapchat Ads · BM directo</li>
+        <li>YouTube · CTV</li>
+        <li>Spark Ads + creator-led</li>
+        <li>LinkedIn Ads</li>
+      </ul>
+      <div class="pillar-tag">BMs + crédito enterprise</div>
+    </div>
+
+    <div class="pillar featured reveal">
+      <div class="pillar-icon">◫</div>
+      <h3 class="pillar-name">Data, BI &amp; Real-time</h3>
+      <ul class="pillar-items">
+        <li>Custom DWH (BigQuery, Snowflake)</li>
+        <li>Pipelines real-time vía CRM y ecommerce</li>
+        <li>Dashboards custom por cliente</li>
+        <li>AI insights generados continuamente</li>
+        <li>Server-side tagging · 1P data layer</li>
+        <li>Brand lift + MMM + atribución</li>
+      </ul>
+      <div class="pillar-tag">Hero para reporting al cliente</div>
+    </div>
+
+    <div class="pillar reveal">
+      <div class="pillar-icon">✦</div>
+      <h3 class="pillar-name">AI-Native Advertising</h3>
+      <ul class="pillar-items">
+        <li>ChatGPT Ads · early access</li>
+        <li>Sponsored answers</li>
+        <li>Creative matrices con AI tooling</li>
+        <li>Brand-safety controls</li>
+        <li>Pipeline listo para cuando LATAM abra</li>
+        <li>Track propio · sin presión inmediata</li>
+      </ul>
+      <div class="pillar-tag">Nueva superficie</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     DATA DASHBOARD · interactive
+     ======================================================== -->
+<section id="dashboard" class="simulator-section">
+  <div class="simulator-inner">
+    <div class="eyebrow reveal">Spotlight · Data infrastructure</div>
+    <h2 class="section-title reveal">
+      Reportes que el cliente<br>
+      <em>guarda y comparte.</em>
+    </h2>
+    <p class="section-sub reveal">
+      Construimos dashboards custom por cuenta que cruzan inventario multi-DSP,
+      Meta, TikTok y CRM en pipelines real-time, con AI insights generados
+      automáticamente. La capa que convierte campañas en sales material para
+      Prodigy frente a sus clientes enterprise.
+    </p>
+
+    <div class="dash-layout">
+      <div class="dash-left">
+        <h3>Probá un dashboard demo por vertical.</h3>
+        <p>
+          Cambiá entre Gaming &amp; E-Sports, Sports Marketing y Growth &amp;
+          Performance para ver cómo se adaptan KPIs, alertas y AI insights según
+          el tipo de campaña. Los datos son ilustrativos; la estructura y la
+          latencia son las que entregaríamos en producción.
+        </p>
+        <p style="font-size: 13px; color: var(--muted); margin-top: 16px;">
+          En producción: ingestión server-side cada 60s, AI insights generados con LLM
+          sobre 7 días móviles, alertas automáticas vía Slack o email cuando se cruzan
+          umbrales definidos por cuenta.
+        </p>
+
+        <div style="margin-top: 36px; padding: 22px; background: white; border: 1px dashed var(--line); border-radius: 16px;">
+          <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--pink); margin-bottom: 12px;">
+            Por qué importa para Prodigy
+          </div>
+          <p style="font-size: 14px; color: var(--ink-soft); line-height: 1.6; margin: 0;">
+            BMW, Televisa, Banco Pichincha o Enel quieren ver el impacto en métricas
+            de negocio, no solo en reportes de plataforma. Esta capa entrega reporting
+            ejecutivo y abre conversación al nivel CMO/CFO —
+            <strong style="color: var(--ink);">y se convierte en argumento de retención y upsell.</strong>
+          </p>
+        </div>
+      </div>
+
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <div class="dash-live">
+            <span class="dash-live-dot"></span>
+            <span>Live</span>
+            <span style="color: var(--muted); font-weight: 500;">· última actualización hace <span id="dash-time">2</span>s</span>
+          </div>
+          <div class="dash-tabs">
+            <button class="dash-tab active" data-vertical="fashion">Gaming &amp; E-Sports</button>
+            <button class="dash-tab" data-vertical="retail">Sports Marketing</button>
+            <button class="dash-tab" data-vertical="travel">Growth &amp; Performance</button>
+          </div>
+        </div>
+
+        <div class="dash-kpis">
+          <div class="dash-kpi">
+            <div class="dash-kpi-label">Inversión hoy</div>
+            <div class="dash-kpi-value">$<span id="kpi-rev">0</span></div>
+            <div class="dash-kpi-delta up" id="kpi-rev-delta">▲ 0%</div>
+          </div>
+          <div class="dash-kpi">
+            <div class="dash-kpi-label">Conversiones</div>
+            <div class="dash-kpi-value"><span id="kpi-ord">0</span></div>
+            <div class="dash-kpi-delta up" id="kpi-ord-delta">▲ 0%</div>
+          </div>
+          <div class="dash-kpi">
+            <div class="dash-kpi-label">CPA</div>
+            <div class="dash-kpi-value">$<span id="kpi-aov">0</span></div>
+            <div class="dash-kpi-delta up" id="kpi-aov-delta">▲ 0%</div>
+          </div>
+          <div class="dash-kpi">
+            <div class="dash-kpi-label">ROAS</div>
+            <div class="dash-kpi-value"><span id="kpi-roas">0</span>x</div>
+            <div class="dash-kpi-delta up" id="kpi-roas-delta">▲ 0%</div>
+          </div>
+        </div>
+
+        <div class="dash-chart">
+          <div class="dash-chart-title">Inversión por hora · últimas 12h</div>
+          <div class="dash-chart-bars" id="dash-bars"></div>
+        </div>
+
+        <div class="dash-insights">
+          <div class="dash-insights-title">
+            <span class="dash-insights-icon">✦</span>
+            AI Insights · generados hace <span id="dash-insight-time">30</span>s
+          </div>
+          <div id="dash-insights-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     CHATGPT ADS SIMULATOR
+     ======================================================== -->
+<section id="chatgpt" class="simulator-section">
+  <div class="simulator-inner">
+    <div class="eyebrow reveal">Spotlight · AI advertising</div>
+    <h2 class="section-title reveal">
+      AI advertising como<br>
+      <em>nueva superficie para el roster.</em>
+    </h2>
+    <p class="section-sub reveal">
+      ChatGPT abrió placements pagos en EE.UU. en febrero 2026 y la expansión a
+      LATAM avanza durante el año. Para una agencia programática es una superficie
+      nueva con formato distinto, alta intención y poca competencia todavía — el
+      momento ideal para preparar el pipeline.
+    </p>
+
+    <div class="sim-layout">
+      <div class="sim-left">
+        <h3>Cómo se vería para un cliente de Prodigy.</h3>
+        <p>
+          Seleccioná un vertical abajo. Vas a ver cómo aparecería un placement de cliente
+          dentro de la conversación — clearly labeled como Sponsored, separado del answer
+          orgánico de ChatGPT.
+        </p>
+        <p style="font-size: 13px; color: var(--muted); margin-top: 16px;">
+          Prodigy mantiene la relación comercial con la marca; Nomade aporta el setup
+          técnico, creative matrices y management. Formato actual: 30 char headline,
+          60 char description, imagen 1:1, UTM estático.
+        </p>
+
+        <div class="sim-prompts">
+          <button class="sim-prompt-btn active" data-scenario="rider">Banking &amp; Finance</button>
+          <button class="sim-prompt-btn" data-scenario="driver">Auto &amp; Premium</button>
+          <button class="sim-prompt-btn" data-scenario="food">Telco &amp; Streaming</button>
+        </div>
+
+        <div style="margin-top: 36px; padding: 22px; background: white; border: 1px dashed var(--line); border-radius: 16px;">
+          <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--pink); margin-bottom: 12px;">
+            Track propio · sin presión inmediata
+          </div>
+          <p style="font-size: 14px; color: var(--ink-soft); line-height: 1.6; margin: 0;">
+            Lo dejamos preparado en paralelo al resto del partnership. Cuando OpenAI
+            abra LATAM, Prodigy llega con el pipeline armado y la conversación abierta
+            con clientes del roster.
+            <strong style="color: var(--ink);">Posicionamiento first-mover en programmatic LATAM.</strong>
+          </p>
+        </div>
+      </div>
+
+      <div class="sim-chat">
+        <div class="sim-chat-header">
+          <span class="dot"></span>
+          Simulación · ChatGPT
+        </div>
+
+        <div class="sim-bubble user">
+          <div class="who">Usuario</div>
+          <div class="text" id="sim-question">¿Cuál es el mejor banco para abrir una cuenta digital en Colombia?</div>
+        </div>
+
+        <div class="sim-bubble gpt">
+          <div class="who">ChatGPT</div>
+          <div class="text" id="sim-answer"></div>
+        </div>
+
+        <div class="sim-ad" id="sim-ad">
+          <div class="sim-ad-label">Sponsored</div>
+          <div class="sim-ad-title" id="sim-ad-title">[Banco] — Cuenta digital sin filas</div>
+          <div class="sim-ad-desc" id="sim-ad-desc">Apertura 100% online en 5 minutos, sin costos de manejo. Tarjeta a domicilio gratis.</div>
+          <div class="sim-ad-meta">
+            <span>Formato: <strong>Native sponsored</strong></span>
+            <span>Pricing: <strong>CPC + CPM</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     USE CASES TABS
+     ======================================================== -->
+<section id="usecases">
+  <div class="eyebrow reveal">Líneas de producto</div>
+  <h2 class="section-title reveal">
+    Cómo aplicamos data <span class="pink">+</span> AI<br>
+    en <em>las líneas de Prodigy.</em>
+  </h2>
+  <p class="section-sub reveal">
+    Gaming &amp; E-Sports, Sports Marketing y Growth &amp; Performance son los tres
+    territorios donde Prodigy ya tiene capability propia. Cada uno tiene su
+    propia economía y exige una receta distinta de inventario, audiencias y data.
+  </p>
+
+  <div class="usecase-tabs reveal">
+    <button class="usecase-tab active" data-tab="rider">🎮 Gaming &amp; E-Sports</button>
+    <button class="usecase-tab" data-tab="driver">⚽ Sports Marketing</button>
+    <button class="usecase-tab" data-tab="food">📈 Growth &amp; Performance</button>
+  </div>
+
+  <div class="usecase-content active" data-content="rider">
+    <div class="uc-grid">
+      <div class="uc-block">
+        <h4>El contexto</h4>
+        <p>
+          Audiencias jóvenes, time-on-platform alto, inventario endemic con
+          dinámicas de pricing y viewability propias. El reto es ir más allá
+          del open exchange y entrar a inventario premium gaming con la
+          atribución cross-platform correcta.
+        </p>
+      </div>
+      <div class="uc-block">
+        <h4>Lo que aportamos</h4>
+        <div class="quote">
+          PMP con publishers endemic gaming<br>
+          Inventario rich media + video skippable<br>
+          Audiencias gamer + co-viewing en CTV<br>
+          Brand lift studies por título / género
+        </div>
+      </div>
+      <div class="uc-block">
+        <h4>El play de Nomade</h4>
+        <p class="play">
+          Multi-DSP arbitrage entre DV360, StackAdapt e Illumin para mismo
+          inventario gaming a mejor CPM. Pipeline real-time que cruza paid,
+          Twitch endemic e in-game con KPIs de cliente.
+        </p>
+        <div class="uc-kpi">KPI: Brand lift + completion rate + cost per gamer</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="usecase-content" data-content="driver">
+    <div class="uc-grid">
+      <div class="uc-block">
+        <h4>El contexto</h4>
+        <p>
+          El timing manda. El partido pasa una sola vez, y la activación tiene
+          que sincronizar creative, inventario y data con el ritmo del evento.
+          Programmatic guaranteed alrededor de fechas tentpole (mundial, finales,
+          clásicos) define gran parte del valor.
+        </p>
+      </div>
+      <div class="uc-block">
+        <h4>Lo que aportamos</h4>
+        <div class="quote">
+          Deals PG con publishers deportivos<br>
+          Dynamic creative por minuto-de-juego<br>
+          CTV en streams deportivos en vivo<br>
+          Brand lift en plaza activada
+        </div>
+      </div>
+      <div class="uc-block">
+        <h4>El play de Nomade</h4>
+        <p class="play">
+          Setup multi-DSP con Illumin para CTV deportivo, DV360 para PG en
+          broadcasters tier-1 y StackAdapt para sports verticals long-tail.
+          Creative matrix sincronizada por evento + AI insights del 1st half.
+        </p>
+        <div class="uc-kpi">KPI: Real-time engagement + brand lift evento</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="usecase-content" data-content="food">
+    <div class="uc-grid">
+      <div class="uc-block">
+        <h4>El contexto</h4>
+        <p>
+          El cliente performance vive de ROAS, CPA y LTV. Las decisiones de
+          presupuesto son semanales o más rápidas y cualquier ineficiencia se
+          paga caro. Es el territorio donde el multi-DSP, la atribución y los
+          modelos predictivos hacen la diferencia más visible.
+        </p>
+      </div>
+      <div class="uc-block">
+        <h4>Lo que aportamos</h4>
+        <div class="quote">
+          Cross-DSP optimization en tiempo real<br>
+          pLTV scoring para pujas por valor<br>
+          MMM + multi-touch attribution<br>
+          Server-side tagging + 1P data layer
+        </div>
+      </div>
+      <div class="uc-block">
+        <h4>El play de Nomade</h4>
+        <p class="play">
+          Pipeline server-side conectado a CRM y ecommerce del cliente.
+          Modelos pLTV y churn alimentando segmentación en los 3 DSPs.
+          Reportes con AI insights que sugieren rebalanceo semanal entre
+          plataformas según performance real.
+        </p>
+        <div class="uc-kpi">KPI: ROAS + CAC payback + LTV/CAC</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     ENGAGEMENT LEVELS
+     ======================================================== -->
+<section id="engage">
+  <div class="eyebrow reveal">Cómo trabajamos</div>
+  <h2 class="section-title reveal">
+    Tres modelos de colaboración —<br>
+    <em>se elijen por cuenta.</em>
+  </h2>
+  <p class="section-sub reveal">
+    No es todo-o-nada. Prodigy puede arrancar con L1 multi-DSP access para sumar
+    inventario en una cuenta, escalar a L2 data &amp; BI custom para reportar al
+    cliente, y agregar L3 ChatGPT Ads cuando el roster esté listo.
+  </p>
+
+  <div class="levels-grid">
+    <div class="level-card reveal">
+      <div class="level-tag">L1</div>
+      <h3 class="level-title">Multi-DSP access</h3>
+      <p class="level-sub">3 DSPs · activación con BMs propios</p>
+      <ul class="level-list">
+        <li>Acceso directo a DV360, StackAdapt e Illumin</li>
+        <li>BMs directos en Meta, TikTok, Snap, YouTube CTV</li>
+        <li>Línea de crédito y facturación consolidada</li>
+        <li>Prodigy activa con tarifas Sales Partner</li>
+      </ul>
+    </div>
+
+    <div class="level-card featured reveal">
+      <div class="level-tag">L2</div>
+      <h3 class="level-title">Data &amp; BI custom</h3>
+      <p class="level-sub">El upsell hero · reporting al cliente</p>
+      <ul class="level-list">
+        <li>Todo L1 +</li>
+        <li>Custom DWH por cliente con pipelines real-time</li>
+        <li>Dashboards live + AI insights generados automáticamente</li>
+        <li>Brand lift + atribución cross-DSP + MMM</li>
+      </ul>
+    </div>
+
+    <div class="level-card reveal">
+      <div class="level-tag">L3</div>
+      <h3 class="level-title">AI ads managed</h3>
+      <p class="level-sub">Nueva superficie · cuando convenga</p>
+      <ul class="level-list">
+        <li>Todo L2 +</li>
+        <li>ChatGPT Ads end-to-end cuando LATAM esté abierto</li>
+        <li>Creative matrices con AI tooling</li>
+        <li>Sin compromiso a activarlo ya — pipeline preparado</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     CTA / NEXT STEPS
+     ======================================================== -->
+<section id="next" class="cta-section">
+  <div class="cta-bg-circle"></div>
+  <div class="cta-bg-pink"></div>
+  <div class="cta-inner">
+    <div class="eyebrow reveal">Próximos pasos</div>
+    <h2 class="section-title reveal">
+      Lo que podemos empezar<br>
+      <em>la próxima semana.</em>
+    </h2>
+
+    <div class="cta-steps">
+      <div class="cta-step reveal">
+        <div class="cta-step-num">01</div>
+        <h4>Sesión de discovery conjunta</h4>
+        <p>
+          Una reunión de 60 min para alinear sobre el roster, qué cuentas tienen
+          la mayor oportunidad de upgrade técnico y cuáles serían los primeros
+          KPIs a tackear juntos. Output: shortlist de oportunidades concretas
+          por línea de producto.
+        </p>
+      </div>
+      <div class="cta-step reveal">
+        <div class="cta-step-num">02</div>
+        <h4>Piloto data &amp; BI · 1 cuenta</h4>
+        <p>
+          Elegimos 1 cuenta del roster para construir el primer dashboard live
+          + AI insights con data multi-DSP. 30-45 días de setup, output
+          mostrable al cliente como nuevo nivel de partnership de Prodigy.
+        </p>
+      </div>
+      <div class="cta-step reveal">
+        <div class="cta-step-num">03</div>
+        <h4>ChatGPT Ads · track listo en paralelo</h4>
+        <p>
+          Dejamos el pipeline armado para activar cuando OpenAI abra LATAM. Sin
+          presión inmediata, pero con un primer caso pensado para presentarle a
+          un cliente flagship el día que llegue el momento.
+        </p>
+      </div>
+    </div>
+
+    <div class="cta-card reveal">
+      <div>
+        <h3>Sigamos la conversación <em>esta semana.</em></h3>
+        <p>
+          Si hay sentido, arrancamos por la sesión de discovery y elegimos juntos
+          la primera cuenta para el piloto de data &amp; BI. ChatGPT Ads queda
+          como track propio sin presionar el calendario.
+        </p>
+      </div>
+      <div class="cta-contact">
+        <div class="cta-contact-label">Contacto</div>
+        <div class="cta-contact-person">
+          <div class="cta-contact-name">Federico Pedemonte</div>
+          <div class="cta-contact-role">Director, Nomade Lab</div>
+        </div>
+        <a href="https://nomadelab.com" class="cta-contact-link" target="_blank" rel="noopener" style="margin-top:18px;">
+          nomadelab.com →
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div>
+    <span class="nomade">NOMADE LAB</span>
+    &nbsp;·&nbsp; × PRODIGY &nbsp;·&nbsp; MAYO 2026
+  </div>
+  <div>
+    Confidencial · US · LATAM · EU
+  </div>
+</footer>
+
+<script>
+// =========================================================
+// 1) Scroll reveal
+// =========================================================
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('in');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
+
+// =========================================================
+// 2) Animated counters
+// =========================================================
+function animateCount(el, target, suffix, duration = 1400) {
+  const start = performance.now();
+  function tick(now) {
+    const p = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(eased * target) + suffix;
+    if (p < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) return;
+    const el = entry.target;
+    const target = parseInt(el.dataset.target, 10);
+    const suffix = el.dataset.suffix || '';
+    if (!isNaN(target)) animateCount(el, target, suffix);
+    counterObserver.unobserve(el);
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.stat-num[data-target]').forEach((el) => counterObserver.observe(el));
+
+// =========================================================
+// 3) Data dashboard interactive
+// =========================================================
+const verticalData = {
+  fashion: {
+    // Gaming & E-Sports — 3001 product line
+    rev: 38420, ord: 1247, aov: 31, roas: 4.6,
+    revDelta: '▲ 16%', ordDelta: '▲ 22%', aovDelta: '▲ 4%', roasDelta: '▲ 0.7x',
+    revDir: 'up', ordDir: 'up', aovDir: 'up', roasDir: 'up',
+    bars: [42, 38, 55, 48, 62, 71, 58, 65, 82, 76, 88, 95],
+    peakIdx: [10, 11],
+    insights: [
+      '<strong>Audiencia gamer activa pico nocturno:</strong> CTR sobre formatos rich media subió 38% entre 20-23h vs. franja diurna. Concentrar el 60% del budget en ese horario optimiza CPA un ~24%.',
+      '<strong>Inventario Twitch + endemic:</strong> el inventario endemic gaming (LATAM Gaming Society, ESL, sitios de streamers) entrega 2.1x mejor brand lift que open exchange. Migrar share progresivamente a PMP.',
+      '<strong>Cross-DSP arbitrage:</strong> StackAdapt está cotizando mismo inventario premium gaming a CPM 18% más bajo que DV360 esta semana. Rebalance recomendado durante la próxima activación.'
+    ]
+  },
+  retail: {
+    // Sports Marketing — MVP product line
+    rev: 84520, ord: 386, aov: 219, roas: 5.4,
+    revDelta: '▲ 28%', ordDelta: '▲ 19%', aovDelta: '▲ 7%', roasDelta: '▲ 1.1x',
+    revDir: 'up', ordDir: 'up', aovDir: 'up', roasDir: 'up',
+    bars: [58, 64, 72, 68, 78, 85, 92, 88, 95, 101, 96, 89],
+    peakIdx: [8, 9],
+    insights: [
+      '<strong>Activación en tiempo real funcionó:</strong> el creative dinámico ajustado por minuto-de-juego entregó 47% más completion rate que el creative estático. Replicar matriz para las próximas fechas.',
+      '<strong>Brand lift en plaza de evento:</strong> awareness creció 31% en ciudades con activación física + paid sincronizado. Recomendación: dedicar 15% del budget a paid coordinado con BTL.',
+      '<strong>Illumin CTV outperform:</strong> Illumin DSP está entregando viewability 94% en inventario CTV deportivo, vs. 87% baseline en DV360. Migrar 40% del CTV de fútbol a Illumin para Mundial 2026.'
+    ]
+  },
+  travel: {
+    // Growth & Performance — Growth product line
+    rev: 248750, ord: 894, aov: 278, roas: 6.1,
+    revDelta: '▲ 32%', ordDelta: '▲ 24%', aovDelta: '▲ 6%', roasDelta: '▲ 1.3x',
+    revDir: 'up', ordDir: 'up', aovDir: 'up', roasDir: 'up',
+    bars: [32, 38, 45, 52, 61, 68, 74, 81, 89, 94, 98, 87],
+    peakIdx: [9, 10],
+    insights: [
+      '<strong>pLTV scoring activado:</strong> los segmentos con pLTV>$420 convierten 2.8x mejor y se ven menos saturados. Recomendación: separar pujas por tier de pLTV en todas las campañas DV360.',
+      '<strong>Multi-DSP fill:</strong> StackAdapt cubrió el 34% de inventario long-tail que DV360 no alcanzó esta semana — mismo cliente, mismo presupuesto, 18% más reach incremental.',
+      '<strong>Atribución corregida:</strong> el modelo MMM muestra que YouTube aporta más al funnel del que el last-click reconoce. Sugerencia de budget shift de +15% a YouTube Pre-roll para junio.'
+    ]
+  }
+};
+
+function formatNum(n) {
+  return n.toLocaleString('es-AR');
+}
+
+function renderDashboard(key) {
+  const d = verticalData[key];
+  // KPIs
+  document.getElementById('kpi-rev').textContent = formatNum(d.rev);
+  document.getElementById('kpi-ord').textContent = formatNum(d.ord);
+  document.getElementById('kpi-aov').textContent = formatNum(d.aov);
+  document.getElementById('kpi-roas').textContent = d.roas.toFixed(1);
+  // Deltas
+  const setDelta = (id, text, dir) => {
+    const el = document.getElementById(id);
+    el.textContent = text;
+    el.classList.toggle('up', dir === 'up');
+    el.classList.toggle('down', dir === 'down');
+  };
+  setDelta('kpi-rev-delta', d.revDelta, d.revDir);
+  setDelta('kpi-ord-delta', d.ordDelta, d.ordDir);
+  setDelta('kpi-aov-delta', d.aovDelta, d.aovDir);
+  setDelta('kpi-roas-delta', d.roasDelta, d.roasDir);
+  // Bars
+  const barsContainer = document.getElementById('dash-bars');
+  barsContainer.innerHTML = '';
+  d.bars.forEach((v, i) => {
+    const bar = document.createElement('div');
+    bar.className = 'dash-bar' + (d.peakIdx.includes(i) ? ' peak' : '');
+    bar.style.height = '0%';
+    barsContainer.appendChild(bar);
+    setTimeout(() => { bar.style.height = v + '%'; }, 40 * i);
+  });
+  // Insights
+  const insightsList = document.getElementById('dash-insights-list');
+  insightsList.innerHTML = d.insights.map(t => `<div class="dash-insight-item">${t}</div>`).join('');
+}
+
+// Auto-init when dashboard scrolls into view
+let dashStarted = false;
+const dashObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting && !dashStarted) {
+      dashStarted = true;
+      renderDashboard('fashion');
+    }
+  });
+}, { threshold: 0.3 });
+const dashEl = document.getElementById('dashboard');
+if (dashEl) dashObserver.observe(dashEl);
+
+// Tab clicks
+document.querySelectorAll('.dash-tab').forEach((tab) => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.dash-tab').forEach((t) => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderDashboard(tab.dataset.vertical);
+  });
+});
+
+// Live timer animation
+setInterval(() => {
+  const t = document.getElementById('dash-time');
+  if (t) {
+    const v = parseInt(t.textContent, 10) || 0;
+    t.textContent = v >= 60 ? 1 : v + 1;
+  }
+}, 1000);
+
+// =========================================================
+// 4) ChatGPT Ads simulator
+// =========================================================
+const scenarios = {
+  rider: {
+    // Banking & Finance — Banco Pichincha / Diners / Colmena style
+    question: '¿Cuál es el mejor banco para abrir una cuenta digital en Colombia?',
+    answer: 'En Colombia hay varias opciones de bancos digitales y tradicionales con apertura 100% online. Los criterios a comparar suelen ser: costos de manejo, costo de retiros en cajeros de otras redes, tasa de ahorro, calidad de la app móvil (transferencias, pagos PSE, control de tarjeta), y los beneficios asociados a categorías como viajes o entretenimiento. Vale la pena revisar la cobertura de cajeros aliados según las ciudades donde te movés más.',
+    adTitle: '[Banco] — Cuenta digital sin filas',
+    adDesc: 'Apertura 100% online en 5 minutos, sin costos de manejo. Tarjeta a domicilio gratis.'
+  },
+  driver: {
+    // Auto & Premium — BMW / Decameron style
+    question: '¿Qué SUV premium conviene para conducir en ciudad y carretera?',
+    answer: 'En el segmento SUV premium hay opciones europeas y asiáticas con propuestas distintas. Los criterios a evaluar suelen ser: consumo combinado (especialmente en versiones híbridas o mild-hybrid), tecnología de asistencia al conductor (ADAS), garantía y red de talleres en LATAM, espacio interior y de carga, y costo total de propiedad a 5 años. Vale comparar tanto el modelo base como las variantes equipadas, porque el costo-beneficio cambia bastante.',
+    adTitle: '[Marca Auto] — Nuevo SUV híbrido',
+    adDesc: 'Tecnología premium y eficiencia híbrida. Agendá tu test drive en concesionarios autorizados.'
+  },
+  food: {
+    // Telco & Streaming — ETB / Televisa style
+    question: '¿Qué plan de internet hogar tiene mejor relación precio-calidad?',
+    answer: 'Los planes de internet hogar varían bastante por ciudad y operador. Los criterios a comparar son: velocidad real medida (no solo la prometida), latencia y jitter (relevante para gaming y videollamadas), tecnología (fibra óptica vs. coaxial), costo del equipo (modem incluido o no), y servicios incluidos como streaming o seguridad. Vale revisar los reportes de calidad de servicio de los reguladores de cada país y los comentarios de usuarios en zonas específicas.',
+    adTitle: '[Telco] — Fibra 500Mbps + streaming',
+    adDesc: 'Instalación gratis y plataforma de streaming incluida. Promo válida hasta junio.'
+  }
+};
+
+let typingTimer = null;
+function typeText(el, text, speed = 20) {
+  clearInterval(typingTimer);
+  el.textContent = '';
+  el.classList.add('sim-cursor');
+  let i = 0;
+  typingTimer = setInterval(() => {
+    if (i >= text.length) {
+      clearInterval(typingTimer);
+      el.classList.remove('sim-cursor');
+      // Reveal ad after typing finishes
+      setTimeout(() => document.getElementById('sim-ad').classList.add('show'), 250);
+      return;
+    }
+    el.textContent += text.charAt(i);
+    i++;
+  }, speed);
+}
+
+function runScenario(key) {
+  const sc = scenarios[key];
+  document.getElementById('sim-question').textContent = sc.question;
+  document.getElementById('sim-ad-title').textContent = sc.adTitle;
+  document.getElementById('sim-ad-desc').textContent = sc.adDesc;
+  document.getElementById('sim-ad').classList.remove('show');
+  typeText(document.getElementById('sim-answer'), sc.answer, 16);
+}
+
+// Run rider scenario when simulator section first hits the viewport
+let simStarted = false;
+const simObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting && !simStarted) {
+      simStarted = true;
+      runScenario('rider');
+    }
+  });
+}, { threshold: 0.35 });
+simObserver.observe(document.getElementById('chatgpt'));
+
+// Prompt buttons
+document.querySelectorAll('.sim-prompt-btn').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.sim-prompt-btn').forEach((b) => b.classList.remove('active'));
+    btn.classList.add('active');
+    runScenario(btn.dataset.scenario);
+  });
+});
+
+// =========================================================
+// 4) Use case tabs
+// =========================================================
+document.querySelectorAll('.usecase-tab').forEach((tab) => {
+  tab.addEventListener('click', () => {
+    const key = tab.dataset.tab;
+    document.querySelectorAll('.usecase-tab').forEach((t) => t.classList.remove('active'));
+    document.querySelectorAll('.usecase-content').forEach((c) => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelector(`.usecase-content[data-content="${key}"]`).classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>
